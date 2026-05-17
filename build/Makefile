@@ -117,24 +117,48 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named black_scholes
+# Target rules for targets named run_tests
 
 # Build rule for target.
-black_scholes: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 black_scholes
-.PHONY : black_scholes
+run_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_tests
+.PHONY : run_tests
 
 # fast build rule for target.
-black_scholes/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/black_scholes.dir/build.make CMakeFiles/black_scholes.dir/build
-.PHONY : black_scholes/fast
+run_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/build
+.PHONY : run_tests/fast
+
+greekTest.o: greekTest.cpp.o
+.PHONY : greekTest.o
+
+# target to build an object file
+greekTest.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/greekTest.cpp.o
+.PHONY : greekTest.cpp.o
+
+greekTest.i: greekTest.cpp.i
+.PHONY : greekTest.i
+
+# target to preprocess a source file
+greekTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/greekTest.cpp.i
+.PHONY : greekTest.cpp.i
+
+greekTest.s: greekTest.cpp.s
+.PHONY : greekTest.s
+
+# target to generate assembly for a file
+greekTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/greekTest.cpp.s
+.PHONY : greekTest.cpp.s
 
 src/bsc.o: src/bsc.cpp.o
 .PHONY : src/bsc.o
 
 # target to build an object file
 src/bsc.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/black_scholes.dir/build.make CMakeFiles/black_scholes.dir/src/bsc.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/src/bsc.cpp.o
 .PHONY : src/bsc.cpp.o
 
 src/bsc.i: src/bsc.cpp.i
@@ -142,7 +166,7 @@ src/bsc.i: src/bsc.cpp.i
 
 # target to preprocess a source file
 src/bsc.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/black_scholes.dir/build.make CMakeFiles/black_scholes.dir/src/bsc.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/src/bsc.cpp.i
 .PHONY : src/bsc.cpp.i
 
 src/bsc.s: src/bsc.cpp.s
@@ -150,7 +174,7 @@ src/bsc.s: src/bsc.cpp.s
 
 # target to generate assembly for a file
 src/bsc.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/black_scholes.dir/build.make CMakeFiles/black_scholes.dir/src/bsc.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/src/bsc.cpp.s
 .PHONY : src/bsc.cpp.s
 
 # Help Target
@@ -161,7 +185,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... black_scholes"
+	@echo "... run_tests"
+	@echo "... greekTest.o"
+	@echo "... greekTest.i"
+	@echo "... greekTest.s"
 	@echo "... src/bsc.o"
 	@echo "... src/bsc.i"
 	@echo "... src/bsc.s"

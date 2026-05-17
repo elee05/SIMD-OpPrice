@@ -113,23 +113,23 @@ double rho_fd(OptionParams p, double h = 0.01) {
 
 
 
-int main() {
-    OptionParams call{100.0, 110.0, 0.05, 0.2, 1.0, true};
-    OptionParams put{100.0, 100.0, 0.05, 0.2, 1.0, false};
+// int main() {
+//     OptionParams call{100.0, 110.0, 0.05, 0.2, 1.0, true};
+//     OptionParams put{100.0, 100.0, 0.05, 0.2, 1.0, false};
 
 
 
-    std::cout << "Call price:  " << black_scholes(call) << '\n';
-    std::cout << "Put price:   " << black_scholes(put)  << '\n';
+//     std::cout << "Call price:  " << black_scholes(call) << '\n';
+//     std::cout << "Put price:   " << black_scholes(put)  << '\n';
 
-    std::cout << "Call delta (exact):  " << delta_call(call) << '\n';
-    std::cout << "Call delta (FD):     " << delta_fd(call) << '\n';
-    std::cout << "Gamma:              " << gamma(call) << '\n';
-    std::cout << "Gamma (FD):         " << gamma_fd(call) << '\n';
-    std::cout << "Vega:               " << vega(call)  << '\n';
+//     std::cout << "Call delta (exact):  " << delta_call(call) << '\n';
+//     std::cout << "Call delta (FD):     " << delta_fd(call) << '\n';
+//     std::cout << "Gamma:              " << gamma(call) << '\n';
+//     std::cout << "Gamma (FD):         " << gamma_fd(call) << '\n';
+//     std::cout << "Vega:               " << vega(call)  << '\n';
 
-    std::cout << "Vega (FD):          " << vega_fd(call) << '\n';
-    std::cout << "Theta (FD):         " << theta_fd(call) << '\n';
-    std::cout << "Rho (FD):           " << rho_fd(call) << '\n';
-    return 0;
-}
+//     std::cout << "Vega (FD):          " << vega_fd(call) << '\n';
+//     std::cout << "Theta (FD):         " << theta_fd(call) << '\n';
+//     std::cout << "Rho (FD):           " << rho_fd(call) << '\n';
+//     return 0;
+// }

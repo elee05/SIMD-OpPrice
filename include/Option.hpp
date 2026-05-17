@@ -16,4 +16,8 @@ struct OptionParams {
           sigma(sigma), T(T), is_call(is_call) {}
 };
 
+double norm_cdf(double x);
+double compute_d1(const OptionParams& params);
+double black_scholes(const OptionParams& params);
+
 #endif // OPTION_HPP
