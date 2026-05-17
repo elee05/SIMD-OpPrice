@@ -1,7 +1,8 @@
 #include <iostream>
 #include "Option.hpp"
-
+#include <numeric>
 #include <cmath>
+#include <vector>
 
 
 double norm_cdf(double x) {
@@ -82,12 +83,14 @@ double vega(OptionParams p) {
     double d1 = compute_d1(p);
     return p.S * norm_pdf(d1) * sqrt(p.T);
 }
-double vega_fd(OptionParams p, double h = 0.01) {
-    OptionParams up = p, down = p;
-    up.sigma   += h;
-    down.sigma -= h;
-    return (black_scholes(up) - black_scholes(down)) / (2 * h);
-    // central difference — more accurate than one-sided
+double vega_fd(OptionParams p, double h = 0.0001) {
+    OptionParams p_up = p;
+    OptionParams p_down = p;
+
+    p_up.sigma += h;
+    p_down.sigma -= h;
+
+    return (black_scholes(p_up) - black_scholes(p_down)) / (2.0 * h);
 }
 
 
@@ -111,7 +114,7 @@ double rho_fd(OptionParams p, double h = 0.01) {
 
 
 int main() {
-    OptionParams call{100.0, 100.0, 0.05, 0.2, 1.0, true};
+    OptionParams call{100.0, 110.0, 0.05, 0.2, 1.0, true};
     OptionParams put{100.0, 100.0, 0.05, 0.2, 1.0, false};
 
 
