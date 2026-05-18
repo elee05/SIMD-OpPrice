@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/snap/cmake/1531/bin/ctest $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
@@ -129,30 +139,6 @@ run_tests/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/build
 .PHONY : run_tests/fast
 
-greekTest.o: greekTest.cpp.o
-.PHONY : greekTest.o
-
-# target to build an object file
-greekTest.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/greekTest.cpp.o
-.PHONY : greekTest.cpp.o
-
-greekTest.i: greekTest.cpp.i
-.PHONY : greekTest.i
-
-# target to preprocess a source file
-greekTest.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/greekTest.cpp.i
-.PHONY : greekTest.cpp.i
-
-greekTest.s: greekTest.cpp.s
-.PHONY : greekTest.s
-
-# target to generate assembly for a file
-greekTest.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/greekTest.cpp.s
-.PHONY : greekTest.cpp.s
-
 src/bsc.o: src/bsc.cpp.o
 .PHONY : src/bsc.o
 
@@ -177,6 +163,78 @@ src/bsc.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/src/bsc.cpp.s
 .PHONY : src/bsc.cpp.s
 
+src/mc.o: src/mc.cpp.o
+.PHONY : src/mc.o
+
+# target to build an object file
+src/mc.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/src/mc.cpp.o
+.PHONY : src/mc.cpp.o
+
+src/mc.i: src/mc.cpp.i
+.PHONY : src/mc.i
+
+# target to preprocess a source file
+src/mc.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/src/mc.cpp.i
+.PHONY : src/mc.cpp.i
+
+src/mc.s: src/mc.cpp.s
+.PHONY : src/mc.s
+
+# target to generate assembly for a file
+src/mc.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/src/mc.cpp.s
+.PHONY : src/mc.cpp.s
+
+tests/bsc_test.o: tests/bsc_test.cpp.o
+.PHONY : tests/bsc_test.o
+
+# target to build an object file
+tests/bsc_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/tests/bsc_test.cpp.o
+.PHONY : tests/bsc_test.cpp.o
+
+tests/bsc_test.i: tests/bsc_test.cpp.i
+.PHONY : tests/bsc_test.i
+
+# target to preprocess a source file
+tests/bsc_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/tests/bsc_test.cpp.i
+.PHONY : tests/bsc_test.cpp.i
+
+tests/bsc_test.s: tests/bsc_test.cpp.s
+.PHONY : tests/bsc_test.s
+
+# target to generate assembly for a file
+tests/bsc_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/tests/bsc_test.cpp.s
+.PHONY : tests/bsc_test.cpp.s
+
+tests/mc_test.o: tests/mc_test.cpp.o
+.PHONY : tests/mc_test.o
+
+# target to build an object file
+tests/mc_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/tests/mc_test.cpp.o
+.PHONY : tests/mc_test.cpp.o
+
+tests/mc_test.i: tests/mc_test.cpp.i
+.PHONY : tests/mc_test.i
+
+# target to preprocess a source file
+tests/mc_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/tests/mc_test.cpp.i
+.PHONY : tests/mc_test.cpp.i
+
+tests/mc_test.s: tests/mc_test.cpp.s
+.PHONY : tests/mc_test.s
+
+# target to generate assembly for a file
+tests/mc_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run_tests.dir/build.make CMakeFiles/run_tests.dir/tests/mc_test.cpp.s
+.PHONY : tests/mc_test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -185,13 +243,20 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... run_tests"
-	@echo "... greekTest.o"
-	@echo "... greekTest.i"
-	@echo "... greekTest.s"
 	@echo "... src/bsc.o"
 	@echo "... src/bsc.i"
 	@echo "... src/bsc.s"
+	@echo "... src/mc.o"
+	@echo "... src/mc.i"
+	@echo "... src/mc.s"
+	@echo "... tests/bsc_test.o"
+	@echo "... tests/bsc_test.i"
+	@echo "... tests/bsc_test.s"
+	@echo "... tests/mc_test.o"
+	@echo "... tests/mc_test.i"
+	@echo "... tests/mc_test.s"
 .PHONY : help
 
 

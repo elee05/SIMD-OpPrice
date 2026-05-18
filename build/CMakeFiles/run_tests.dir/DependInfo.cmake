@@ -8,8 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/greekTest.cpp" "CMakeFiles/run_tests.dir/greekTest.cpp.o" "gcc" "CMakeFiles/run_tests.dir/greekTest.cpp.o.d"
   "/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/src/bsc.cpp" "CMakeFiles/run_tests.dir/src/bsc.cpp.o" "gcc" "CMakeFiles/run_tests.dir/src/bsc.cpp.o.d"
+  "/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/src/mc.cpp" "CMakeFiles/run_tests.dir/src/mc.cpp.o" "gcc" "CMakeFiles/run_tests.dir/src/mc.cpp.o.d"
+  "/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/tests/bsc_test.cpp" "CMakeFiles/run_tests.dir/tests/bsc_test.cpp.o" "gcc" "CMakeFiles/run_tests.dir/tests/bsc_test.cpp.o.d"
+  "/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/tests/mc_test.cpp" "CMakeFiles/run_tests.dir/tests/mc_test.cpp.o" "gcc" "CMakeFiles/run_tests.dir/tests/mc_test.cpp.o.d"
   "" "run_tests" "gcc" "CMakeFiles/run_tests.dir/link.d"
   )
 

@@ -1,6 +1,9 @@
-#pragma once
+#ifndef MC_HPP
+#define MC_HPP
 
-#include "option.hpp"
+#pragma once
+#include <cstdint>
+#include "Option.hpp"
 
 double monte_carlo_price(
     OptionParams params,
@@ -8,3 +11,5 @@ double monte_carlo_price(
     int num_steps,
     uint64_t seed
 );
+
+#endif // MC_HPP

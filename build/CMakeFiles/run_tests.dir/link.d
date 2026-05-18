@@ -2,8 +2,10 @@ run_tests: \
   /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/Scrt1.o \
   /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/crti.o \
   /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o \
-  CMakeFiles/run_tests.dir/greekTest.cpp.o \
+  CMakeFiles/run_tests.dir/tests/bsc_test.cpp.o \
+  CMakeFiles/run_tests.dir/tests/mc_test.cpp.o \
   CMakeFiles/run_tests.dir/src/bsc.cpp.o \
+  CMakeFiles/run_tests.dir/src/mc.cpp.o \
   /usr/lib/x86_64-linux-gnu/libgtest.a \
   /usr/lib/x86_64-linux-gnu/libgtest_main.a \
   /usr/lib/x86_64-linux-gnu/libgtest.a \
@@ -41,9 +43,13 @@ run_tests: \
 
 /usr/lib/gcc/x86_64-linux-gnu/13/crtbeginS.o:
 
-CMakeFiles/run_tests.dir/greekTest.cpp.o:
+CMakeFiles/run_tests.dir/tests/bsc_test.cpp.o:
+
+CMakeFiles/run_tests.dir/tests/mc_test.cpp.o:
 
 CMakeFiles/run_tests.dir/src/bsc.cpp.o:
+
+CMakeFiles/run_tests.dir/src/mc.cpp.o:
 
 /usr/lib/x86_64-linux-gnu/libgtest.a:
 

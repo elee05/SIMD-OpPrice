@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/include
 
-CXX_FLAGS = -O3 -DNDEBUG -std=c++17 -Wall -Wextra -Wpedantic -DGTEST_HAS_PTHREAD=1
+CXX_FLAGS = -std=c++17 -Wall -Wextra -Wpedantic -DGTEST_HAS_PTHREAD=1
 
