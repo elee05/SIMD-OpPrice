@@ -96,7 +96,6 @@ __m256d norm_pdf_pd(__m256d x) {
 }
 
 int main() {
-    // Program starts here
     OptionBook book = {
         .S = {100.0, 105.0, 110.0, 115.0},
         .K = {100.0, 100.0, 100.0, 100.0},
