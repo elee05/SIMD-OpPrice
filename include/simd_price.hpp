@@ -24,3 +24,4 @@ void price_book_avx2(
 // S S S S S S S S ... | K K K K K K K K ... | σ σ σ σ σ σ σ σ ...
 
 #endif // OPTIONBOOK_HPP
+
