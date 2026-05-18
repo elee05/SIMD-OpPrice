@@ -39,6 +39,16 @@ void price_book_avx2(
         __m256d Nd1 = norm_cdf_pd(d1);
         __m256d Nd2 = norm_cdf_pd(d2);
 
+        // __m256d discount = Sleef_expd4_u10avx2(_mm256_mul_pd(_mm256_sub_pd(_mm256_setzero_pd(), r), T));
+        __m256d discount = Sleef_expd4_u10avx2(_mm256_mul_pd(-r, T));
+        __m256d price = _mm256_sub_pd(
+            _mm256_mul_pd(S, Nd1),
+            _mm256_mul_pd(
+                _mm256_mul_pd(K, discount),
+                Nd2
+            )
+        ); // call price formula
+
         // __m256d discount = exp_pd(-r * T);
         // __m256d price    = S * Nd1 - K * discount * Nd2; // call price formula 
 
@@ -46,7 +56,7 @@ void price_book_avx2(
         // _mm256_store_pd(&results[i], price);
 
         // _mm256_store_pd(&results[i], log_SK); // for testing, store log(S/K) instead of price
-        _mm256_storeu_pd(&results[i], sigma_sq); // for testing, store sigma^2 instead of price
+        _mm256_storeu_pd(&results[i], price); // for testing, store the calculated price
 
     }
 }
@@ -87,11 +97,8 @@ __m256d norm_cdf_pd(__m256d x) {
     );
 
     __m256d poly = t; // (you should expand full polynomial here)
-
     __m256d pdf = norm_pdf_pd(x);
-
     __m256d result = _mm256_sub_pd(one, _mm256_mul_pd(pdf, poly));
-
     __m256d result_neg = _mm256_sub_pd(one, result);
 
     return _mm256_blendv_pd(result, result_neg, sign_mask);
@@ -108,11 +115,8 @@ __m256d norm_pdf_pd(__m256d x) {
 
     __m256d half = _mm256_set1_pd(0.5);
     __m256d neg_half_x2 = _mm256_mul_pd(_mm256_sub_pd(_mm256_setzero_pd(), half), x2);
-
     __m256d exp_term = Sleef_expd4_u10avx2(neg_half_x2);
-
     __m256d inv_sqrt_2pi = _mm256_set1_pd(0.3989422804014327);
-
     __m256d pdf = _mm256_mul_pd(inv_sqrt_2pi, exp_term);
     return pdf;
 
@@ -133,5 +137,7 @@ int main() {
     for (int i = 0; i < 4; i++) {
         std::cout << "Option " << i << " price: " << results[i] << std::endl;
     }
+
+
     return 0;
 }
