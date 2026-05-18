@@ -63,45 +63,46 @@ void price_book_avx2(
 
 // Abramowitz & Stegun approximation — accurate to ~1e-7, fully vectorizable to use for SIMD
 __m256d norm_cdf_pd(__m256d x) {
-    // // rational polynomial approximation to N(x)
-    // // accurate to ~1e-7, fully vectorizable
+    // rational polynomial approximation to N(x)
+    // accurate to ~1e-7, fully vectorizable
 
-    // __m256d mask = _mm256_set1_pd(-0.0);
-    // __m256d y = _mm256_andnot_pd(mask, x); // abs(x)
+    __m256d mask = _mm256_set1_pd(-0.0);
+    __m256d y = _mm256_andnot_pd(mask, x); // abs(x)
 
-    // __m256d t = 1.0 / (1.0 + 0.2316419 * y);
-    // __m256d poly = t * (0.319381530
-    //            + t * (-0.356563782
-    //            + t * (1.781477937
-    //            + t * (-1.821255978
-    //            + t *  1.330274429))));
-    // __m256d result = 1.0 - norm_pdf_pd(x) * poly;
-    // // handle negative x by symmetry: N(-x) = 1 - N(x)
+    __m256d t = 1.0 / (1.0 + 0.2316419 * y);
+    __m256d poly = t * (0.319381530
+               + t * (-0.356563782
+               + t * (1.781477937
+               + t * (-1.821255978
+               + t *  1.330274429))));
+    __m256d result = 1.0 - norm_pdf_pd(x) * poly;
+    // handle negative x by symmetry: N(-x) = 1 - N(x)
     // return _mm_blend_pd(result, 1.0 - result, x < 0);
+    return result;
 
 
-    __m256d zero = _mm256_setzero_pd();
-    __m256d one  = _mm256_set1_pd(1.0);
+    // __m256d zero = _mm256_setzero_pd();
+    // __m256d one  = _mm256_set1_pd(1.0);
 
-    // mask for x < 0
-    __m256d sign_mask = _mm256_cmp_pd(x, zero, _CMP_LT_OQ);
+    // // mask for x < 0
+    // __m256d sign_mask = _mm256_cmp_pd(x, zero, _CMP_LT_OQ);
 
-    // |x|
-    __m256d y = _mm256_andnot_pd(_mm256_set1_pd(-0.0), x);
+    // // |x|
+    // __m256d y = _mm256_andnot_pd(_mm256_set1_pd(-0.0), x);
 
-    // t = 1 / (1 + 0.2316419 * |x|)
-    __m256d t = _mm256_div_pd(
-        one,
-        _mm256_add_pd(one,
-            _mm256_mul_pd(_mm256_set1_pd(0.2316419), y))
-    );
+    // // t = 1 / (1 + 0.2316419 * |x|)
+    // __m256d t = _mm256_div_pd(
+    //     one,
+    //     _mm256_add_pd(one,
+    //         _mm256_mul_pd(_mm256_set1_pd(0.2316419), y))
+    // );
 
-    __m256d poly = t; // (you should expand full polynomial here)
-    __m256d pdf = norm_pdf_pd(x);
-    __m256d result = _mm256_sub_pd(one, _mm256_mul_pd(pdf, poly));
-    __m256d result_neg = _mm256_sub_pd(one, result);
+    // __m256d poly = t; // (you should expand full polynomial here)
+    // __m256d pdf = norm_pdf_pd(x);
+    // __m256d result = _mm256_sub_pd(one, _mm256_mul_pd(pdf, poly));
+    // __m256d result_neg = _mm256_sub_pd(one, result);
 
-    return _mm256_blendv_pd(result, result_neg, sign_mask);
+    // return _mm256_blendv_pd(result, result_neg, sign_mask);
 
 
 
