@@ -23,7 +23,6 @@ TEST(MonteCarlo, DeterministicForFixedSeed) {
 }
 
 // 2. Different seeds should generally produce different prices.
-// (Sanity check that the seed is actually being used.)
 TEST(MonteCarlo, DifferentSeedsDiffer) {
     OptionParams p(100, 100, 0.05, 0.20, 1.0, true);
     double a = monte_carlo_price(p, 10'000, 50, 1);
