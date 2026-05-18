@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cmath>
+#include <immintrin.h>
 
 // Structure of Arrays — SIMD-friendly
 struct OptionBook {
@@ -20,6 +21,9 @@ void price_book_avx2(
     int n
 );
 
+__m256d norm_cdf_pd(__m256d x);
+
+__m256d norm_pdf_pd(__m256d x);
 // Memory looks like:
 // S S S S S S S S ... | K K K K K K K K ... | σ σ σ σ σ σ σ σ ...
 
