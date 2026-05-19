@@ -27,6 +27,9 @@ void price_book_avx2(
         __m256d sigma = _mm256_loadu_pd(&book.sigma[i]);
         __m256d T     = _mm256_loadu_pd(&book.T[i]);
 
+        std::vector<double> is_call_vec(book.is_call.begin() + i, book.is_call.begin() + i + 4);
+        // __m256d is_call = _mm256_load_pd(is_call_vec.data());
+
 
         __m256d log_SK    = Sleef_logd4_u10avx2(_mm256_div_pd(S, K));          // ln(S/K) × 4
         __m256d sigma_sq  = sigma * sigma;

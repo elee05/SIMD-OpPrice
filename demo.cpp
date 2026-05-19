@@ -17,14 +17,14 @@ int main() {
         .r = {0.05, 0.05, 0.05, 0.05},
         .sigma = {0.2, 0.2, 0.2, 0.2},
         .T = {1.0, 1.0, 1.0, 1.0},
-        .is_call = {true, true, true, true}
+        .is_call = {true, true, true, false}
     };
     double results[4];
     price_book_avx2(book, results, 4);
     for (int i = 0; i < 4; i++) {
         std::cout << "Option " << i << " S: " << book.S[i] <<
         " K: " << book.K[i] << " r: " << book.r[i] << " sigma: " << book.sigma[i] <<
-         " T: " << book.T[i] <<   " price: " << results[i] << std::endl;
+         " T: " << book.T[i] << " is_call: " << book.is_call[i] << " price: " << results[i] << std::endl;
     }
     
 
