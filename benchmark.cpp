@@ -146,9 +146,6 @@ int main(int argc, char** argv) {
     std::printf("  Max absolute error: %.3e\n", max_abs);
     std::printf("  Max relative error: %.3e\n", max_rel);
  
-    std::printf("\nChecksums (sanity):\n");
-    std::printf("  Scalar sum: %.6f\n", sum_scalar);
-    std::printf("  AVX2   sum: %.6f\n", sum_avx2);
 
     return 0;
 }
