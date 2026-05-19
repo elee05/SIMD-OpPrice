@@ -9,5 +9,5 @@
 - immintrin.h
 
 ## Running(Linux)
- g++ -O3 -march=native -mavx2 -mfma     -Iinclude -I/usr/local/include     src/simd_price.cpp benchmark.cpp -o benchmark     -L/usr/local/lib -lsleef
+ ```g++ -O3 -march=native -mavx2 -mfma     -Iinclude -I/usr/local/include     src/simd_price.cpp benchmark.cpp -o benchmark     -L/usr/local/lib -lsleef```
 
