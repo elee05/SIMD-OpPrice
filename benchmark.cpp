@@ -40,7 +40,7 @@ static OptionBook make_random_book(int n, unsigned seed = 42) {
     std::mt19937_64 rng(seed);
     std::uniform_real_distribution<double> uS(50.0, 200.0);
     std::uniform_real_distribution<double> uK(50.0, 200.0);
-    std::uniform_real_distribution<double> ur(0.0, 0.10);
+    std::uniform_real_distribution<double> ur(0.03, 0.06);
     std::uniform_real_distribution<double> us(0.10, 0.60);
     std::uniform_real_distribution<double> uT(0.05, 1.00);
  
@@ -105,7 +105,7 @@ static double time_best_ns(F&& fn, int warmup = 3, int reps = 20) {
 }
 
 int main(int argc, char** argv) {
-    int N = (argc > 1) ? std::atoi(argv[1]) : 10;
+    int N = (argc > 1) ? std::atoi(argv[1]) : 1'000'000;
     if (N % 4 != 0) N -= (N % 4);  // round down to multiple of 4
  
     std::printf("Workload: N = %d options\n\n", N);
@@ -113,47 +113,47 @@ int main(int argc, char** argv) {
     OptionBook book = make_random_book(N);
     std::vector<double> out_scalar(N), out_avx2(N);
  
-    // // Time both. price_book_avx2 already loops i += 4 internally, so we
-    // // hand it the full book in one call.
-    // double ns_scalar = time_best_ns([&]{ price_book_scalar(book, out_scalar.data(), N); });
-    // double ns_avx2   = time_best_ns([&]{ price_book_avx2  (book, out_avx2  .data(), N); });
+    // Time both. price_book_avx2 already loops i += 4 internally, so we
+    // hand it the full book in one call.
+    double ns_scalar = time_best_ns([&]{ price_book_scalar(book, out_scalar.data(), N); });
+    double ns_avx2   = time_best_ns([&]{ price_book_avx2  (book, out_avx2  .data(), N); });
  
-    // // Defeat dead-code elimination: print a checksum of each output.
-    // double sum_scalar = 0.0, sum_avx2 = 0.0;
-    // for (int i = 0; i < N; ++i) { sum_scalar += out_scalar[i]; sum_avx2 += out_avx2[i]; }
+    // Defeat dead-code elimination: print a checksum of each output.
+    double sum_scalar = 0.0, sum_avx2 = 0.0;
+    for (int i = 0; i < N; ++i) { sum_scalar += out_scalar[i]; sum_avx2 += out_avx2[i]; }
  
-    // // Accuracy: max abs and relative error vs scalar reference.
-    // double max_abs = 0.0, max_rel = 0.0;
-    // for (int i = 0; i < N; ++i) {
-    //     double diff = std::fabs(out_avx2[i] - out_scalar[i]);
-    //     max_abs = std::max(max_abs, diff);
-    //     double denom = std::max(std::fabs(out_scalar[i]), 1e-12);
-    //     max_rel = std::max(max_rel, diff / denom);
-    // }
- 
-    // auto report = [&](const char* name, double ns) {
-    //     double ns_per = ns / N;
-    //     double mops   = 1e3 / ns_per;
-    //     std::printf("  %-8s %12.0f ns total  %8.2f ns/option  %8.2f M options/sec\n",
-    //                 name, ns, ns_per, mops);
-    // };
- 
-    // std::printf("Timing (best of 20 runs after warmup):\n");
-    // report("Scalar:", ns_scalar);
-    // report("AVX2:",   ns_avx2);
-    // std::printf("\n  Speedup: %.2fx\n\n", ns_scalar / ns_avx2);
- 
-    // std::printf("Accuracy (AVX2 vs scalar reference):\n");
-    // std::printf("  Max absolute error: %.3e\n", max_abs);
-    // std::printf("  Max relative error: %.3e\n", max_rel);
-
-    price_book_avx2  (book, out_avx2  .data(), N);
-    for (int i = 0; i < N; i++) {
-
-        std::cout << "Option " << i << " S: " << book.S[i] <<
-        " K: " << book.K[i] << " r: " << book.r[i] << " sigma: " << book.sigma[i] <<
-         " T: " << book.T[i] << " price: " << out_avx2[i] << std::endl;
+    // Accuracy: max abs and relative error vs scalar reference.
+    double max_abs = 0.0, max_rel = 0.0;
+    for (int i = 0; i < N; ++i) {
+        double diff = std::fabs(out_avx2[i] - out_scalar[i]);
+        max_abs = std::max(max_abs, diff);
+        double denom = std::max(std::fabs(out_scalar[i]), 1e-12);
+        max_rel = std::max(max_rel, diff / denom);
     }
+ 
+    auto report = [&](const char* name, double ns) {
+        double ns_per = ns / N;
+        double mops   = 1e3 / ns_per;
+        std::printf("  %-8s %12.0f ns total  %8.2f ns/option  %8.2f M options/sec\n",
+                    name, ns, ns_per, mops);
+    };
+ 
+    std::printf("Timing (best of 20 runs after warmup):\n");
+    report("Scalar:", ns_scalar);
+    report("AVX2:",   ns_avx2);
+    std::printf("\n  Speedup: %.2fx\n\n", ns_scalar / ns_avx2);
+ 
+    std::printf("Accuracy (AVX2 vs scalar reference):\n");
+    std::printf("  Max absolute error: %.3e\n", max_abs);
+    std::printf("  Max relative error: %.3e\n", max_rel);
+
+    // price_book_avx2  (book, out_avx2  .data(), N);
+    // for (int i = 0; i < N; i++) {
+
+    //     std::cout << "Option " << i << " S: " << book.S[i] <<
+    //     " K: " << book.K[i] <<
+    //      " T: " << book.T[i] << " r: " << book.r[i] << " sigma: " << book.sigma[i]  << " price: " << out_avx2[i] << std::endl;
+    // }
  
 
     return 0;

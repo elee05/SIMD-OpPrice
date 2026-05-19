@@ -6,17 +6,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# ---------------------------------------------------------------------------
 # 1. Main Executable Target
-# ---------------------------------------------------------------------------
 # add_executable(black_scholes
 #     src/bsc.cpp
 # )
 # target_include_directories(black_scholes PRIVATE include)
 
-# ---------------------------------------------------------------------------
 # 2. Test Executable Target
-# ---------------------------------------------------------------------------
 find_package(GTest REQUIRED)
 
 # Compile sources + tests into one binary. gtest_main supplies main().
@@ -34,9 +30,7 @@ include(GoogleTest)
 enable_testing()
 gtest_discover_tests(run_tests)
 
-# ---------------------------------------------------------------------------
 # 3. Compiler Warnings
-# ---------------------------------------------------------------------------
 if(MSVC)
     target_compile_options(run_tests PRIVATE /W4)
 else()
