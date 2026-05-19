@@ -1,5 +1,0 @@
-if(EXISTS "/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/build/run_tests[1]_tests.cmake")
-  include("/mnt/c/Users/eigen/OneDrive/Desktop/projects/npEA/build/run_tests[1]_tests.cmake")
-else()
-  add_test(run_tests_NOT_BUILT run_tests_NOT_BUILT)
-endif()
