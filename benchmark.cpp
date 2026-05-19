@@ -1,5 +1,3 @@
-// compare scalar vs AVX2 option pricer
-
 #include "simd_price.hpp"
 #include "Option.hpp"
 
