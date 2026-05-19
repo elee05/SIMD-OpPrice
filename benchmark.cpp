@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <iostream>
 #include <cstdlib>
 #include <limits>
 #include <random>
@@ -104,7 +105,7 @@ static double time_best_ns(F&& fn, int warmup = 3, int reps = 20) {
 }
 
 int main(int argc, char** argv) {
-    int N = (argc > 1) ? std::atoi(argv[1]) : 1'000'000;
+    int N = (argc > 1) ? std::atoi(argv[1]) : 1'000;
     if (N % 4 != 0) N -= (N % 4);  // round down to multiple of 4
  
     std::printf("Workload: N = %d options\n\n", N);
@@ -145,6 +146,14 @@ int main(int argc, char** argv) {
     std::printf("Accuracy (AVX2 vs scalar reference):\n");
     std::printf("  Max absolute error: %.3e\n", max_abs);
     std::printf("  Max relative error: %.3e\n", max_rel);
+
+    // price_book_avx2  (book, out_avx2  .data(), N);
+    // for (int i = 0; i < N; i++) {
+
+    //     std::cout << "Option " << i << " S: " << book.S[i] <<
+    //     " K: " << book.K[i] << " r: " << book.r[i] << " sigma: " << book.sigma[i] <<
+    //      " T: " << book.T[i] << " price: " << out_avx2[i] << std::endl;
+    // }
  
 
     return 0;

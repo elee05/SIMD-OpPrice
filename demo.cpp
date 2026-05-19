@@ -22,8 +22,11 @@ int main() {
     double results[4];
     price_book_avx2(book, results, 4);
     for (int i = 0; i < 4; i++) {
-        std::cout << "Option " << i << " price: " << results[i] << std::endl;
+        std::cout << "Option " << i << " S: " << book.S[i] <<
+        " K: " << book.K[i] << " r: " << book.r[i] << " sigma: " << book.sigma[i] <<
+         " T: " << book.T[i] <<   " price: " << results[i] << std::endl;
     }
+    
 
 
     return 0;
