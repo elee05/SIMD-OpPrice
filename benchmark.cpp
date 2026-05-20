@@ -1,7 +1,9 @@
 #include "simd_price.hpp"
-#include "sleef.h"
-#include "omp.h"
 #include "Option.hpp"
+
+#include "omp.h"
+#include "sleef.h"
+#include <immintrin.h>
 
 #include <algorithm>
 #include <chrono>
@@ -168,7 +170,7 @@ static void price_book_parallel(const OptionBook& book, double* results,
 }
 
 int main(int argc, char** argv) {
-    int N = (argc > 1) ? std::atoi(argv[1]) : 1'000;
+    int N = (argc > 1) ? std::atoi(argv[1]) : 1'000'000;
     if (N % 4 != 0) N -= (N % 4);  // round down to multiple of 4
 
     // introduce threads
@@ -183,13 +185,10 @@ int main(int argc, char** argv) {
     OptionBook book = make_random_book(N);
     std::vector<double> out_scalar(N), out_avx2(N), out_omp(N);
  
-    // Time both. price_book_avx2 already loops i += 4 internally, so we
-    // hand it the full book in one call.
     double ns_scalar = time_best_ns([&]{ price_book_scalar(book, out_scalar.data(), N); });
     double ns_avx2   = time_best_ns([&]{ price_book_avx2  (book, out_avx2  .data(), N); });
     double ns_omp    = time_best_ns([&]{ price_book_parallel(book, out_omp.data(), N, num_threads); });
  
-    // Defeat dead-code elimination: print a checksum of each output.
     // Defeat dead-code elimination: print a checksum of each output.
     double sum_scalar = 0.0, sum_avx2 = 0.0, sum_omp = 0.0;
     for (int i = 0; i < N; ++i) {

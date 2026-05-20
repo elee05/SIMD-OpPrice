@@ -5,8 +5,9 @@
 - demo.cpp
 
 ## Important Libraries
-- sleef.h
-- immintrin.h
+- sleef.h(for SIMD)
+- immintrin.h(for SIMD)
+- omp.h(for OpenMP parallization across cores)
 
 ## Running(Linux)
  ```g++ -O3 -march=native -mavx2 -mfma     -Iinclude -I/usr/local/include     src/simd_price.cpp benchmark.cpp -o benchmark     -L/usr/local/lib -lsleef``` \
