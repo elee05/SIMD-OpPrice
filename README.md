@@ -17,7 +17,8 @@
  The OpenMP library can then be used to run multiple threads of SIMD acroos cores. Theoretical 64x
  Example:
 
- ```Workload: N = 1000000 options
+ ```
+ Workload: N = 1000000 options
 
 Timing (best of 20 runs after warmup):
   Scalar:      63395699 ns total     63.40 ns/option     15.77 M options/sec
