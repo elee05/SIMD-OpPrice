@@ -16,7 +16,7 @@
  The goal of this project is to use SIMD to 4x the throughput of option pricing. The AVX2 library allows basic operations to be executed on 4 elements held in a vector at a time. I also use sleef to do the same for more complicated operations like taking logs. This command compares my own standard implementation of black scholes pricing calulation to one that uses the AVX2 and sleef libraries.  
 
 
- The OpenMP library can then be used to run multiple threads of SIMD acroos cores. Theoretical 64x
+ The OpenMP library can then be used to run multiple threads of SIMD across cores. Theoretical 64x
  Example:
 
  ```
