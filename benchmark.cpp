@@ -1,4 +1,6 @@
 #include "simd_price.hpp"
+#include "sleef.h"
+#include "omp.h"
 #include "Option.hpp"
 
 #include <algorithm>
@@ -102,6 +104,67 @@ static double time_best_ns(F&& fn, int warmup = 3, int reps = 20) {
         best = std::min(best, ns);
     }
     return best;
+}
+
+
+// multicore + AVX2
+//
+// operating directly on a sub-range [start, start + count) of the SoA. 
+// so each OpenMP thread price its own slice without copying anything — every thread reads
+// disjoint memory and writes disjoint results.
+static inline void price_chunk_avx2(const OptionBook& book,
+                                    double* results,
+                                    int start, int count)
+{
+    for (int i = start; i < start + count; i += 4) {
+        __m256d S     = _mm256_loadu_pd(&book.S[i]);
+        __m256d K     = _mm256_loadu_pd(&book.K[i]);
+        __m256d r     = _mm256_loadu_pd(&book.r[i]);
+        __m256d sigma = _mm256_loadu_pd(&book.sigma[i]);
+        __m256d T     = _mm256_loadu_pd(&book.T[i]);
+
+        __m256d log_SK    = Sleef_logd4_u10avx2(_mm256_div_pd(S, K));
+        __m256d sigma_sq  = sigma * sigma;
+        __m256d sqrt_T    = Sleef_sqrtd4_u35avx2(T);
+        __m256d sigma_sqT = sigma * sqrt_T;
+
+        __m256d d1 = (log_SK + (r + 0.5 * sigma_sq) * T) / sigma_sqT;
+        __m256d d2 = d1 - sigma_sqT;
+
+        __m256d Nd1 = norm_cdf_pd(d1);
+        __m256d Nd2 = norm_cdf_pd(d2);
+
+        __m256d discount = Sleef_expd4_u10avx2(_mm256_mul_pd(-r, T));
+        __m256d price = _mm256_sub_pd(
+            _mm256_mul_pd(S, Nd1),
+            _mm256_mul_pd(_mm256_mul_pd(K, discount), Nd2)
+        );
+
+        _mm256_storeu_pd(&results[i], price);
+    }
+}
+
+// Parallel driver: split the book across cores, AVX2 within each core.
+// Chunk size is rounded to a multiple of 4 so every thread's slice is
+// safe for the 4-wide SIMD inner loop. The final thread mops up any
+// remainder so we still cover the whole book.
+static void price_book_parallel(const OptionBook& book, double* results,
+                                int n, int num_threads)
+{
+    #pragma omp parallel num_threads(num_threads)
+    {
+        int tid    = omp_get_thread_num();
+        int nth    = omp_get_num_threads();
+
+        // Per-thread chunk size, rounded down to a multiple of 4.
+        int chunk  = (n / nth) & ~3;
+        int start  = tid * chunk;
+        int count  = (tid == nth - 1) ? (n - start) : chunk;
+
+        if (count > 0) {
+            price_chunk_avx2(book, results, start, count);
+        }
+    }
 }
 
 int main(int argc, char** argv) {
