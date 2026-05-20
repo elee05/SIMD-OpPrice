@@ -168,30 +168,48 @@ static void price_book_parallel(const OptionBook& book, double* results,
 }
 
 int main(int argc, char** argv) {
-    int N = (argc > 1) ? std::atoi(argv[1]) : 1'000'000;
+    int N = (argc > 1) ? std::atoi(argv[1]) : 1'000;
     if (N % 4 != 0) N -= (N % 4);  // round down to multiple of 4
+
+    // introduce threads
+    int num_threads = (argc > 2) ? std::atoi(argv[2]) : omp_get_max_threads();
+    if (num_threads < 1) num_threads = 1;
+
+    int max_useful = std::max(1, N / 4);
+    if (num_threads > max_useful) num_threads = max_useful;
  
     std::printf("Workload: N = %d options\n\n", N);
  
     OptionBook book = make_random_book(N);
-    std::vector<double> out_scalar(N), out_avx2(N);
+    std::vector<double> out_scalar(N), out_avx2(N), out_omp(N);
  
     // Time both. price_book_avx2 already loops i += 4 internally, so we
     // hand it the full book in one call.
     double ns_scalar = time_best_ns([&]{ price_book_scalar(book, out_scalar.data(), N); });
     double ns_avx2   = time_best_ns([&]{ price_book_avx2  (book, out_avx2  .data(), N); });
+    double ns_omp    = time_best_ns([&]{ price_book_parallel(book, out_omp.data(), N, num_threads); });
  
     // Defeat dead-code elimination: print a checksum of each output.
-    double sum_scalar = 0.0, sum_avx2 = 0.0;
-    for (int i = 0; i < N; ++i) { sum_scalar += out_scalar[i]; sum_avx2 += out_avx2[i]; }
+    // Defeat dead-code elimination: print a checksum of each output.
+    double sum_scalar = 0.0, sum_avx2 = 0.0, sum_omp = 0.0;
+    for (int i = 0; i < N; ++i) {
+        sum_scalar += out_scalar[i];
+        sum_avx2   += out_avx2[i];
+        sum_omp    += out_omp[i];
+    }
  
     // Accuracy: max abs and relative error vs scalar reference.
     double max_abs = 0.0, max_rel = 0.0;
+    double max_abs_omp = 0.0, max_rel_omp = 0.0;
     for (int i = 0; i < N; ++i) {
         double diff = std::fabs(out_avx2[i] - out_scalar[i]);
         max_abs = std::max(max_abs, diff);
         double denom = std::max(std::fabs(out_scalar[i]), 1e-12);
         max_rel = std::max(max_rel, diff / denom);
+
+        double diff_omp = std::fabs(out_omp[i] - out_scalar[i]);
+        max_abs_omp = std::max(max_abs_omp, diff_omp);
+        max_rel_omp = std::max(max_rel_omp, diff_omp / denom);
     }
  
     auto report = [&](const char* name, double ns) {
@@ -202,13 +220,18 @@ int main(int argc, char** argv) {
     };
  
     std::printf("Timing (best of 20 runs after warmup):\n");
-    report("Scalar:", ns_scalar);
-    report("AVX2:",   ns_avx2);
-    std::printf("\n  Speedup: %.2fx\n\n", ns_scalar / ns_avx2);
- 
-    std::printf("Accuracy (AVX2 vs scalar reference):\n");
-    std::printf("  Max absolute error: %.3e\n", max_abs);
-    std::printf("  Max relative error: %.3e\n", max_rel);
+    report("Scalar:",          ns_scalar);
+    report("AVX2 (1 core):",   ns_avx2);
+    report("AVX2 + OpenMP:",   ns_omp);
+    std::printf("\n");
+    std::printf("  AVX2  vs Scalar:        %6.2fx\n", ns_scalar / ns_avx2);
+    std::printf("  OpenMP vs Scalar:       %6.2fx\n", ns_scalar / ns_omp);
+    std::printf("  OpenMP vs single-core:  %6.2fx  (ideal: %dx)\n\n",
+                ns_avx2 / ns_omp, num_threads);
+
+    std::printf("Accuracy vs scalar reference:\n");
+    std::printf("  AVX2   max abs err: %.3e   max rel err: %.3e\n", max_abs,     max_rel);
+    std::printf("  OpenMP max abs err: %.3e   max rel err: %.3e\n", max_abs_omp, max_rel_omp);
 
     // price_book_avx2  (book, out_avx2  .data(), N);
     // for (int i = 0; i < N; i++) {
