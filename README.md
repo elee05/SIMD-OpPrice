@@ -15,7 +15,7 @@
 
 
  The OpenMP library can then be used to run multiple threads of SIMD acroos cores. Theoretical 64x
- Example\ 
+ Example:
 
  ```Workload: N = 1000000 options
 
