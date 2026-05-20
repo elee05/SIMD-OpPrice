@@ -28,7 +28,7 @@ Timing (best of 20 runs after warmup):
 
 Accuracy vs scalar reference:
   AVX2   max abs err: 1.485e+02   max rel err: 1.485e+14
-  OpenMP max abs err: 1.485e+02   max rel err: 1.485e+14```
+  OpenMP max abs err: 1.485e+02   max rel err: 1.485e+14``` \ 
  - just for calls right now
  - a negative value corresponds to a worthless option
  - Compile and run demo.cpp to see example calculations and option parameters.
