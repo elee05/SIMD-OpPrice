@@ -1,4 +1,4 @@
-# Calculating Option Prices Using Same Instruction Multiple Data Computation
+# SIMD(Same Instruction Multiple Data Computation) to Speed up Option Price Calculation 
 
 ## Relvant Files
 - benchmark.cpp
